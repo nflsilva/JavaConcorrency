@@ -24,7 +24,6 @@ public class Task {
     public Task(int id, List<Double> operands, Type type){
         this.id = id;
         this.operands = operands;
-        this.dependencies = dependencies;
         this.type = type;
     }
 
