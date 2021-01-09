@@ -51,22 +51,25 @@ public class Task {
         return result;
     }
     private Double computeSubtract(List<Double> operands){
-        Double result = 0.0;
-        for(Double o : operands){
+        Double result = operands.size() > 0 ? operands.get(0) : 0.0;
+        for(int i = 1; i < operands.size(); i++){
+            Double o = operands.get(i);
             result -= o;
         }
         return result;
     }
     private Double computeMultiply(List<Double> operands){
-        Double result = 1.0;
-        for(Double o : operands){
+        Double result = operands.size() > 0 ? operands.get(0) : 0.0;
+        for(int i = 1; i < operands.size(); i++){
+            Double o = operands.get(i);
             result *= o;
         }
         return result;
     }
     private Double computeDivide(List<Double> operands){
-        Double result = 1.0;
-        for(Double o : operands){
+        Double result = operands.size() > 0 ? operands.get(0) : 0.0;
+        for(int i = 1; i < operands.size(); i++){
+            Double o = operands.get(i);
             result /= o;
         }
         return result;
