@@ -1,3 +1,5 @@
+import model.Task;
+
 import java.util.concurrent.Callable;
 
 public class TaskConsumer implements Callable<Double> {
@@ -11,6 +13,7 @@ public class TaskConsumer implements Callable<Double> {
 
     @Override
     public Double call(){
-        return 0.0;
+        Task task = buffer.getTask();
+        return task.compute();
     }
 }
