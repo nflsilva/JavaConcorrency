@@ -30,6 +30,10 @@ public class Task {
 
 
     public Double compute() throws ArithmeticException{
+        try {
+            Thread.sleep(1000);
+        }catch (Exception e){}
+
         switch (this.type){
             case Add:
                 return computeAdd();
