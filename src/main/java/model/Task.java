@@ -3,11 +3,12 @@ package model;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.Future;
 
 public class Task {
 
     private int id;
-    private List<Double> operands;
+    private List<TaskOperand> operands;
     private Type type;
 
     public enum Type {
@@ -21,7 +22,7 @@ public class Task {
         return id;
     }
 
-    public Task(int id, List<Double> operands, Type type){
+    public Task(int id, List<TaskOperand> operands, Type type){
         this.id = id;
         this.operands = operands;
         this.type = type;
@@ -31,45 +32,45 @@ public class Task {
     public Double compute() throws ArithmeticException{
         switch (this.type){
             case Add:
-                return computeAdd(operands);
-            case Divide:
-                return computeDivide(operands);
-            case Multiply:
-                return computeMultiply(operands);
+                return computeAdd();
             case Subtract:
-                return computeSubtract(operands);
+                return computeSubtract();
+            case Multiply:
+                return computeMultiply();
+            case Divide:
+                return computeDivide();
             default:
                 throw new ArithmeticException("Type unknown.");
         }
     }
 
-    private Double computeAdd(List<Double> operands){
+    private Double computeAdd(){
         Double result = 0.0;
-        for(Double o : operands){
-            result += o;
+        for(TaskOperand o : operands){
+            result += o.getValue();
         }
         return result;
     }
-    private Double computeSubtract(List<Double> operands){
-        Double result = operands.size() > 0 ? operands.get(0) : 0.0;
+    private Double computeSubtract(){
+        Double result = operands.size() > 0 ? operands.get(0).getValue() : 0.0;
         for(int i = 1; i < operands.size(); i++){
-            Double o = operands.get(i);
+            Double o = operands.get(i).getValue();
             result -= o;
         }
         return result;
     }
-    private Double computeMultiply(List<Double> operands){
-        Double result = operands.size() > 0 ? operands.get(0) : 0.0;
+    private Double computeMultiply(){
+        Double result = operands.size() > 0 ? operands.get(0).getValue() : 0.0;
         for(int i = 1; i < operands.size(); i++){
-            Double o = operands.get(i);
+            Double o = operands.get(i).getValue();
             result *= o;
         }
         return result;
     }
-    private Double computeDivide(List<Double> operands){
-        Double result = operands.size() > 0 ? operands.get(0) : 0.0;
+    private Double computeDivide(){
+        Double result = operands.size() > 0 ? operands.get(0).getValue() : 0.0;
         for(int i = 1; i < operands.size(); i++){
-            Double o = operands.get(i);
+            Double o = operands.get(i).getValue();
             result /= o;
         }
         return result;

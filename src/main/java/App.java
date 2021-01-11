@@ -1,33 +1,30 @@
 import model.Task;
+import model.TaskOperand;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 
 public class App {
 
     public static void main(String[] args) {
 
 
-        Hashtable<Integer, Double> resultsCache = new Hashtable<Integer, Double>();
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-        Task t0 = new Task(0, new ArrayList<Double>(List.of(12.3, 12.3)), Task.Type.Add);
-        Task t1 = new Task(1, new ArrayList<Double>(List.of(2.0)), Task.Type.Multiply);
+        Task task = new Task(0, new ArrayList<>(List.of(
+                new TaskOperand(12.3),
+                new TaskOperand(2.3),
+                new TaskOperand(1.2))), Task.Type.Add);
 
-        try {
-            resultsCache.put(t0.getId(), t0.compute());
-            resultsCache.put(t1.getId(), t1.compute());
-        }
-        catch (ArithmeticException ae){
-            System.out.println("[Error] Error executing task: " + ae.getMessage().toString());
-        }
+        TaskBuffer tb = new TaskBuffer(10);
+        TaskConsumer ts = new TaskConsumer(tb);
 
-        for(Integer key : resultsCache.keySet()){
-            System.out.println(key.toString() + " : " + resultsCache.get(key).toString());
-
-        }
-
-
+        Future<Double> future = executorService.submit(ts);
 
         System.out.println("Done!");
 
