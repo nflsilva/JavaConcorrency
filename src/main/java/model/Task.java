@@ -3,12 +3,15 @@ package model;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class Task {
+public class Task implements Callable<Double> {
 
     private List<TaskOperand> operands;
     private Type type;
+
+
 
     public enum Type {
         Add,
@@ -23,8 +26,8 @@ public class Task {
     }
 
 
-    public Double compute() throws ArithmeticException{
-
+    @Override
+    public Double call() throws Exception {
         switch (this.type){
             case Add:
                 return computeAdd();
