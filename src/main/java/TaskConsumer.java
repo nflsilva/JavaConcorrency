@@ -5,15 +5,15 @@ import java.util.concurrent.Callable;
 public class TaskConsumer implements Callable<Double> {
 
 
-    private TaskBuffer buffer;
+    private TaskBuffer taskBuffer;
 
-    public TaskConsumer(TaskBuffer tf){
-        buffer = tf;
+    public TaskConsumer(TaskBuffer taskBuffer){
+        this.taskBuffer = taskBuffer;
     }
 
     @Override
     public Double call(){
-        Task task = buffer.getTask();
+        Task task = taskBuffer.getTask();
         return task.compute();
     }
 }

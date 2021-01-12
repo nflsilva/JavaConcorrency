@@ -7,7 +7,6 @@ import java.util.concurrent.Future;
 
 public class Task {
 
-    private int id;
     private List<TaskOperand> operands;
     private Type type;
 
@@ -18,21 +17,13 @@ public class Task {
         Divide
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public Task(int id, List<TaskOperand> operands, Type type){
-        this.id = id;
+    public Task(List<TaskOperand> operands, Type type){
         this.operands = operands;
         this.type = type;
     }
 
 
     public Double compute() throws ArithmeticException{
-        try {
-            Thread.sleep(1000);
-        }catch (Exception e){}
 
         switch (this.type){
             case Add:
@@ -53,6 +44,7 @@ public class Task {
         for(TaskOperand o : operands){
             result += o.getValue();
         }
+        simulateComputingTime();
         return result;
     }
     private Double computeSubtract(){
@@ -61,6 +53,7 @@ public class Task {
             Double o = operands.get(i).getValue();
             result -= o;
         }
+        simulateComputingTime();
         return result;
     }
     private Double computeMultiply(){
@@ -69,6 +62,7 @@ public class Task {
             Double o = operands.get(i).getValue();
             result *= o;
         }
+        simulateComputingTime();
         return result;
     }
     private Double computeDivide(){
@@ -77,11 +71,17 @@ public class Task {
             Double o = operands.get(i).getValue();
             result /= o;
         }
+        simulateComputingTime();
         return result;
     }
 
 
-
+    private void simulateComputingTime(){
+        try {
+            //System.out.println("Computing on thread: " + Thread.currentThread().getId());
+            Thread.sleep(1000);
+        } catch (InterruptedException ie){ }
+    }
 
 
 }

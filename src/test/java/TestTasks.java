@@ -13,7 +13,7 @@ public class TestTasks {
     @Test
     public void testAdd(){
         Double expectedResult = 15.8;
-        Task task = new Task(0, new ArrayList<>(List.of(
+        Task task = new Task(new ArrayList<>(List.of(
                 new TaskOperand(12.3),
                 new TaskOperand(2.3),
                 new TaskOperand(1.2))), Task.Type.Add);
@@ -24,7 +24,7 @@ public class TestTasks {
     @Test
     public void testSubtract(){
         Double expectedResult = 8.8;
-        Task task = new Task(0, new ArrayList<>(List.of(
+        Task task = new Task(new ArrayList<>(List.of(
                 new TaskOperand(12.3),
                 new TaskOperand(2.3),
                 new TaskOperand(1.2))), Task.Type.Subtract);
@@ -35,7 +35,7 @@ public class TestTasks {
     @Test
     public void testMultiply(){
         Double expectedResult = 33.948;
-        Task task = new Task(0, new ArrayList<>(List.of(
+        Task task = new Task(new ArrayList<>(List.of(
                 new TaskOperand(12.3),
                 new TaskOperand(2.3),
                 new TaskOperand(1.2))), Task.Type.Multiply);
@@ -46,7 +46,7 @@ public class TestTasks {
     @Test
     public void testDivide(){
         Double expectedResult = 6.15;
-        Task task = new Task(0, new ArrayList<>(List.of(
+        Task task = new Task(new ArrayList<>(List.of(
                 new TaskOperand(12.3),
                 new TaskOperand(2.0),
                 new TaskOperand(1.0))), Task.Type.Divide);

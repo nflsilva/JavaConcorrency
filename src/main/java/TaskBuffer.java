@@ -7,36 +7,32 @@ import java.util.concurrent.*;
 
 public class TaskBuffer {
 
+    private ExecutorService executorService;
     private Semaphore tasksSemaphore;
-    private Queue<Task> buffer;
+    private ConcurrentLinkedQueue<Task> buffer;
 
-    public TaskBuffer(int maxTasks){
+    public TaskBuffer(int maxTasks, int maxThreads){
+        executorService = Executors.newFixedThreadPool(maxThreads);
         tasksSemaphore = new Semaphore(maxTasks);
-        buffer = new LinkedList<>();
+        buffer = new ConcurrentLinkedQueue<>();
     }
 
-    public void addTask(Task t){
-
+    public Future<Double> addTask(Task task){
+        Future<Double> taskFuture = null;
         try {
             tasksSemaphore.acquire();
-            buffer.add(t);
+            buffer.add(task);
+            taskFuture = executorService.submit(new TaskConsumer(this));
         }catch (InterruptedException iex){
 
         }
-        tasksSemaphore.release();
+        return taskFuture;
     }
 
     public Task getTask(){
-
-        Task r = null;
-        try {
-            tasksSemaphore.acquire();
-            r = buffer.remove();
-        }catch (InterruptedException iex){
-
-        }
+        Task task = buffer.remove();
         tasksSemaphore.release();
-        return r;
+        return task;
     }
 
 }
