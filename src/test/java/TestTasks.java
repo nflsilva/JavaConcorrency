@@ -4,10 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -63,8 +60,9 @@ public class TestTasks {
     public void testDependencies(){
         /*
         Computing:
-        [5*(2+4) + 4*(5+7)] / [5*(2+4) + 4*(5+7)] = 1
+        r = [5*(2+4) + 4*(5+7)] / [5*(2+4) + 4*(5+7)]
         nTasks = 11
+        r must be 1
 
         ----- Phase 0 -----
         task00 = (2+4)
@@ -113,6 +111,9 @@ public class TestTasks {
 
         Task task30 = new Task(new ArrayList<>(List.of(new TaskOperand(task20Future), new TaskOperand(task21Future))), Task.Type.Divide);
         Future<Double> task30Future = executorService.submit(task30);
+
+
+
         try {
             Double taskResult = task30Future.get();
             Double expectedResult = 1.0;
@@ -121,6 +122,9 @@ public class TestTasks {
             fail();
         } catch (ExecutionException e) {
             fail();
+        }
+        finally {
+            executorService.shutdown();
         }
 
 

@@ -80,10 +80,11 @@ public class Task implements Callable<Double> {
 
 
     private void simulateComputingTime(){
-        try {
+        return ;
+        /*try {
             //System.out.println("Computing on thread: " + Thread.currentThread().getId());
             Thread.sleep(1000);
-        } catch (InterruptedException ie){ }
+        } catch (InterruptedException ie){ }*/
     }
 
 
