@@ -5,41 +5,87 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ThreadSafeCounter {
 
-    private int counter;
-    private ReadWriteLock lock;
+    private int counterMax;
+    private int counterCurrent;
+    private Lock lock;
+    private Lock waitLock;
+
 
     public ThreadSafeCounter(int counter) {
-        this.counter = counter;
-        this.lock = new ReentrantReadWriteLock();
+        this.counterMax = counter;
+        this.counterCurrent = 0;
+        this.lock = new ReentrantLock();
+        this.waitLock = new ReentrantLock();
     }
 
 
-    public int getCounter() {
-        this.lock.readLock().lock();
+    public int incrementOrWait() {
+        int result = -1;
+        do {
+            lock.lock();
+            if(counterCurrent == counterMax) {
+                // counter is at max
+                lock.unlock();
+                synchronized (waitLock){
+                    try {
+                        waitLock.wait();
+                    } catch (InterruptedException e) {
+                        // woke up
+                        continue;
+                    }
+                }
+            }
+            else {
+                result = counterCurrent;
+            }
+        } while(result == -1);
+
+        counterCurrent++;
+
+        lock.unlock();
+        return result;
+    }
+
+    public int decrementOrWait(){
+        int result = -1;
+
+        synchronized (waitLock){
+            waitLock.notify();
+        }
+
+        counterCurrent--;
+
+        return result;
+    }
+
+
+
+    public int getCounterCurrent() {
+        this.lock.lock();
         int returnValue;
         try {
-            returnValue = this.counter;
+            returnValue = this.counterCurrent;
         }finally {
-            this.lock.readLock().unlock();
+            this.lock.unlock();
         }
         return returnValue;
     }
 
     public void increment() {
-        this.lock.writeLock().lock();
+        this.lock.lock();
         try {
-            this.counter++;
+            this.counterCurrent++;
         }finally {
-            this.lock.writeLock().unlock();
+            this.lock.unlock();
         }
     }
 
     public void decrement() {
-        this.lock.writeLock().lock();
+        this.lock.lock();
         try {
-            this.counter--;
+            this.counterCurrent--;
         }finally {
-            this.lock.writeLock().unlock();
+            this.lock.unlock();
         }
     }
 

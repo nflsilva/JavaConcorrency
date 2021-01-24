@@ -151,7 +151,40 @@ public class TestThreadSafeBuffer {
 
     }
 
+    @Test
+    public void testBufferGetPutConcurrent() throws Exception {
 
+        /*
+        Computing:
+        r = (3 * 5 + 2 * 10 + 6 * 1) * nCycles
+        r must be 41 * nCycles
+         */
+
+        int nCycles = 3;
+        int nConsumers = 1;
+        int nProducers = 1;
+
+        ThreadSafeBuffer taskBuffer = new ThreadSafeBuffer(10);
+        ExecutorService consumersExecService = Executors.newFixedThreadPool(nConsumers);
+        ExecutorService producersExecService = Executors.newFixedThreadPool(nProducers);
+
+        // Setup Consumers and Producers
+        List<Future<Double>> futures = new ArrayList<>();
+        for(int i = 0; i < nCycles * 3; i++) {
+            producersExecService.submit(new SimpleTaskProducer(i % 3, taskBuffer));
+            futures.add(consumersExecService.submit(new SimpleTaskConsumer(taskBuffer)));
+        }
+
+
+        Double r = 0.0;
+        for(Future<Double> result : futures)
+            r += result.get();
+
+
+
+        assertEquals((Double)(41.0 * nCycles), r);
+
+    }
 
 
 
